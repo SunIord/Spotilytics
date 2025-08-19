@@ -32,5 +32,21 @@ if artistName:
         st.write(f"**Name:** {artist['name']}")
         st.write(f"**Followers:** {artist['followers']['total']}")
         st.write(f"**Popularity:** {artist['popularity']}")
+        st.write(f"**Genres:** {', '.join(artist['genres'])}")
+
+        # Fetch top tracks for the artist
+        top_tracks = sp.artist_top_tracks(artist['id'])['tracks']
+        data = []
+        for track in top_tracks:
+            data.append({
+                "Track": track["name"],
+                "Album": track["album"]["name"],
+                "Released Date": track["album"]["release_date"],
+                "Popularity": track["popularity"]
+            })
+
+        df_tracks = pd.DataFrame(data)
+        st.dataframe(df_tracks)
+
     else:
         st.write("Artist not found.")
