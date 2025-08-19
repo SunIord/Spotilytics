@@ -1,9 +1,9 @@
-import streamlit as st # used to create the web interface
-import pandas as pd # used for data manipulation
-import plotly.express as px # used to create interactive charts
-import spotipy # used to interact with the Spotify API
+import streamlit as st
+import pandas as pd 
+import plotly.express as px 
+import spotipy 
 from spotipy.oauth2 import SpotifyClientCredentials
-import os # used to access environment variables
+import os 
 from dotenv import load_dotenv  
 
 # Authentication with the Spotify API using environment variables
@@ -46,7 +46,18 @@ if artistName:
             })
 
         df_tracks = pd.DataFrame(data)
+        df_tracks.index = df_tracks.index + 1
         st.dataframe(df_tracks)
 
     else:
         st.write("Artist not found.")
+
+else:
+    st.write("## Welcome to Spotilytics!")
+    st.write("Discover insights about your favorite artists")
+    st.write("")
+    st.write("### How to use:")
+    st.write("1. Enter an artist name in the search box")
+    st.write("2. View detailed information about the artist")
+    st.write("3. Explore their top tracks and popularity stats")
+    st.write("")
