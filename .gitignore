@@ -1,0 +1,6 @@
+.vscode/
+.venv/
+.env
+.cache
+appVibe.py
+__pycache__/
