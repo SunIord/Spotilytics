@@ -17,6 +17,38 @@ def render_artist_selection(artists):
                 return artist
     return None
 
+def create_tracks_dataframe(tracks):
+    data = []
+    for track in tracks:
+        data.append({
+            "Track": track["name"],
+            "Album": track["album"]["name"],
+            "Released Date": track["album"]["release_date"],
+            "Popularity": track["popularity"] 
+        })
+
+    df_tracks = pd.DataFrame(data)
+    df_tracks.index = df_tracks.index + 1
+    return df_tracks
+
+def create_discography_dataframe(tracks):
+    data = []
+    for track in tracks:
+        # Para discografia completa, usamos album_info
+        data.append({
+            "Track": track["name"],
+            "Album": track['album_info']['name'],
+            "Released Date": track['album_info']['release_date']
+            # Não incluímos Popularity pois não está disponível
+        })
+
+    df_tracks = pd.DataFrame(data)
+    df_tracks.index = df_tracks.index + 1
+    return df_tracks
+
+def create_display_dataframe(df_tracks):
+    return df_tracks[["Track", "Album", "Released Date"]]
+
 def render_artist_profile(artist, tracks):
     col1, col2 = st.columns([1, 3])
     with col1:
@@ -37,19 +69,13 @@ def render_artist_profile(artist, tracks):
     # Render top tracks
     st.divider()
     st.subheader("Top Tracks")
+ 
+    df_tracks_complete = create_tracks_dataframe(tracks)
+    df_display = create_display_dataframe(df_tracks_complete)
     
-    data = []
-    for track in tracks:
-        data.append({
-            "Track": track["name"],
-            "Album": track["album"]["name"],
-            "Released Date": track["album"]["release_date"],
-            "Popularity": track["popularity"]
-        })
-
-    df_tracks = pd.DataFrame(data)
-    df_tracks.index = df_tracks.index + 1
-    st.dataframe(df_tracks)
+    st.dataframe(df_display)
+    
+    return df_tracks_complete
 
 def render_welcome_message():
     st.write("## Welcome to Spotilytics!")

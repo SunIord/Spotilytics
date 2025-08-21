@@ -1,7 +1,9 @@
 import streamlit as st
+import pandas as pd
 from utils.auth import init_spotify_client
-from utils.search import update_search, get_artist_top_tracks
-from utils.ui import render_artist_selection, render_artist_profile, render_welcome_message, render_artist_not_found
+from utils.search import update_search, get_artist_top_tracks, get_complete_discography
+from utils.ui import render_artist_selection, render_artist_profile, render_welcome_message, render_artist_not_found, create_tracks_dataframe, create_discography_dataframe
+from utils.charts import plot_top_tracks, plot_release_timeline, plot_album_track_stats
 
 # Authentication with the Spotify API using environment variables
 sp = init_spotify_client()
@@ -49,9 +51,19 @@ with st.sidebar:
 if st.session_state.selected_artist:
     artist = st.session_state.selected_artist
     top_tracks = get_artist_top_tracks(sp, artist['id'])
-    
-    render_artist_profile(artist, top_tracks)
+    complete_discography = get_complete_discography(sp, artist['id'])
 
+    df_tracks_complete = render_artist_profile(artist, top_tracks)
+    df_discography = create_discography_dataframe(complete_discography)
+    
+    # Display charts and analytics
+    st.divider()
+    st.subheader("Track Analytics")
+    
+    plot_top_tracks(df_tracks_complete)
+    plot_release_timeline(df_discography)
+    plot_album_track_stats(df_tracks_complete)
+    
     # Add a button to go back to search results
     if st.button("← Back to search results"):
         st.session_state.selected_artist = None
