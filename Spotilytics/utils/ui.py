@@ -34,12 +34,10 @@ def create_tracks_dataframe(tracks):
 def create_discography_dataframe(tracks):
     data = []
     for track in tracks:
-        # Para discografia completa, usamos album_info
         data.append({
             "Track": track["name"],
             "Album": track['album_info']['name'],
             "Released Date": track['album_info']['release_date']
-            # Não incluímos Popularity pois não está disponível
         })
 
     df_tracks = pd.DataFrame(data)
@@ -49,7 +47,7 @@ def create_discography_dataframe(tracks):
 def create_display_dataframe(df_tracks):
     return df_tracks[["Track", "Album", "Released Date"]]
 
-def render_artist_profile(artist, tracks):
+def render_artist_basic_info(artist):
     col1, col2 = st.columns([1, 3])
     with col1:
         if artist['images']:
@@ -65,6 +63,9 @@ def render_artist_profile(artist, tracks):
             st.write(f"**Genres:** {', '.join(artist['genres'])}")
         else:
             st.write("**Genres:** No genres available")
+
+def render_artist_profile(artist, tracks):
+    render_artist_basic_info(artist)
 
     # Render top tracks
     st.divider()

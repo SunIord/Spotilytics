@@ -9,32 +9,28 @@ def search_artists(_sp_client, query):
 def get_artist_top_tracks(_sp_client, artist_id):
     return _sp_client.artist_top_tracks(artist_id)['tracks']
 
-@st.cache_data(ttl=86400, show_spinner=False)  # Cache de 24 horas para discografia
+@st.cache_data(ttl=86400, show_spinner=False) # 24 hours cache for artist info
 def get_artist_albums(_sp_client, artist_id):
-    """Busca TODOS os álbuns do artista"""
     albums = _sp_client.artist_albums(
         artist_id, 
         album_type='album,single,compilation',
-        limit=50  # Máximo permitido pela API
+        limit=50  
     )
     return albums['items']
 
-@st.cache_data(ttl=86400, show_spinner=False)  # Cache de 24 horas
+@st.cache_data(ttl=86400, show_spinner=False)  # 24 hours cache for album tracks
 def get_album_tracks(_sp_client, album_id):
-    """Busca TODAS as faixas de um álbum"""
     tracks = _sp_client.album_tracks(album_id)
     return tracks['items']
 
 @st.cache_data(ttl=86400, show_spinner="Fetching complete discography...")
 def get_complete_discography(_sp_client, artist_id):
-    """Busca a discografia COMPLETA do artista"""
     all_tracks = []
     albums = get_artist_albums(_sp_client, artist_id)
     
     for album in albums:
         tracks = get_album_tracks(_sp_client, album['id'])
         for track in tracks:
-            # Adicionar informações do álbum em cada faixa
             track['album_info'] = {
                 'name': album['name'],
                 'release_date': album['release_date'],
