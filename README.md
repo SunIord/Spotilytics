@@ -35,7 +35,7 @@ pip install -r requirements.txt
 ```
 
 ### 5. Configure as variáveis de ambiente
-#### Crie um arquivo `.env` na raiz do projeto e adicione suas credenciais da API do Spotify:
+#### Crie um arquivo `.env` na pasta do projeto e adicione suas credenciais da API do Spotify:
 ```ini
 spotipyId=SEU_CLIENT_ID
 spotipySecret=SEU_CLIENT_SECRET
